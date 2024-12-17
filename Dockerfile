@@ -1,4 +1,33 @@
-FROM openjdk:17-jdk-alpine
-VOLUME /tmp
-ADD target/traffic-management-service.jar traffic-management-service.jar
-ENTRYPOINT ["java", "-jar", "/traffic-management-service.jar"]
+FROM openjdk:17-jdk-slim AS build
+
+# Instalar Maven
+RUN apt-get update && apt-get install -y maven
+
+# Establecer el directorio de trabajo
+WORKDIR /app
+
+# Copiar proyecto
+COPY . /app
+
+# Compilar el proyecto
+RUN mvn clean install -DskipTests
+
+# Usar una imagen ligera para el contenedor final
+FROM openjdk:17-jdk-slim
+
+# Establecer el directorio de trabajo
+WORKDIR /app
+
+# Copiar el archivo JAR generado
+COPY --from=build /app/target/Backend-Wakanda-Trafico-0.0.1-SNAPSHOT.jar /app/backend-wakanda-trafico.jar
+
+# Descargar y configurar wait-for-it.sh
+RUN apt-get update && apt-get install -y curl && \
+    curl -o /app/wait-for-it.sh https://raw.githubusercontent.com/vishnubob/wait-for-it/master/wait-for-it.sh && \
+    chmod +x /app/wait-for-it.sh
+
+# Exponer el puerto
+EXPOSE 8088
+
+# Comando para iniciar la aplicación
+ENTRYPOINT ["./wait-for-it.sh", "mysql-wakanda-trafico:3306", "--", "java", "-jar", "/app/backend-wakanda-trafico.jar"]
