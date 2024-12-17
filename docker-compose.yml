@@ -6,7 +6,7 @@ services:
       - MYSQL_DATABASE=Backend-Wakanda-Trafico
       - MYSQL_ROOT_PASSWORD=P@ssw0rd
     ports:
-      - "3320:3306"
+      - "3311:3306"
     networks:
       - backend-network
     healthcheck:
@@ -20,7 +20,7 @@ services:
       context: ./
     container_name: backend-wakanda-trafico
     ports:
-      - "8088:8098"
+      - "8082:8092"
     networks:
       - backend-network
     environment:

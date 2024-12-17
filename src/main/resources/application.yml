@@ -24,7 +24,7 @@ spring:
     name: backend-wakanda-trafico
 
 server:
-  port: 8098
+  port: 8092
 
 jwt:
   secret: securesecretkey

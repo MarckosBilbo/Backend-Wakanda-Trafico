@@ -27,7 +27,7 @@ RUN apt-get update && apt-get install -y curl && \
     chmod +x /app/wait-for-it.sh
 
 # Exponer el puerto
-EXPOSE 8088
+EXPOSE 8082
 
 # Comando para iniciar la aplicación
 ENTRYPOINT ["./wait-for-it.sh", "mysql-wakanda-trafico:3306", "--", "java", "-jar", "/app/backend-wakanda-trafico.jar"]
